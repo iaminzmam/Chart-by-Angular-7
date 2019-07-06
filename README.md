@@ -1,5 +1,4 @@
 "# Chart-by-Angular-7" 
 
-
-Note:
-  install chart.js
+install angular 7
+install chart.js
