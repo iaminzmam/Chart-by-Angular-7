@@ -11,22 +11,12 @@ export class AppComponent {
   title = 'DelayReportChart';
   chart: [];
 
-   source1:number = 0
-   srcn1: string
-     source2:number = 0
-     srcn2: string
-    source3:number = 0
-    srcn3:string
+  src = [0,0,0]
+  srcn = ['','','']
+  dest = [0,0,0]
+  destn = ['','','']
 
-     dest1:number = 0
-     destn1: string
-     dest2:number = 0
-     destn2: string
-     dest3:number = 0
-     destn3: string
-
-  sourceobj = {id: 1}
-  destobj = {}
+  
 
   @ViewChild('canvasB') canvasB: ElementRef;
   
@@ -36,205 +26,136 @@ export class AppComponent {
   ngOnInit() {
 
 
-    let  janY =  0;
-    let janN = 0;
-    let  febY =  0
-    let febN = 0
-    let  marY =  0
-    let marN = 0
-    let  aprY =  0
-    let aprN = 0
-    let  mayY =  0
-    let mayN = 0
-    let  junY =  0
-    let junN = 0
-    let  julY =  0
-    let julN = 0
-    let  augY =  0
-    let augN = 0
-    let  sepY =  0
-    let sepN = 0
-    let  octY =  0
-    let octN = 0
-    let  novY =  0
-    let novN = 0
-    let  decY =  0
-    let decN = 0
+    let monthY = [0,0,0,0,0,0,0,0,0,0,0,0]
+    let monthN = [0,0,0,0,0,0,0,0,0,0,0,0]
 
-    
-
-    console.log(janY);
 
     this.delayService.datafetch()
             .subscribe(res => {
-                res.forEach((obj) => {
-                  const month = obj.trip_start_time;
-                  if(month[5] == '0') {
-                      if (month[6] == '1') {
-                          if (obj.delay <= 0 ) {
-                              janY++;
-                              
-                          } else {
-                              janN++;
-                          }
-                      } else if (month[6] == '2') {
-                                  if (obj.delay <= 0) {
-                                      febY++; 
-                                  } else {
-                                      febN++;
-                                  }
-                    } else if (month[6] == '3') {
-                                  if (obj.delay <= 0) {
-                                      marY++; 
-                                  } else {
-                                      marN++;
-                                  }
-                    } else if (month[6] == '4') {
-                                  if (obj.delay <= 0) {
-                                      aprY++; 
-                                  } else {
-                                      aprN++;
-                                  }
-                    } else if (month[6] == '5') {
-                                  if (obj.delay <= 0) {
-                                      mayY++; 
-                                  } else {
-                                      mayN++;
-                                  }
-                    } else if (month[6] == '6') {
-                                  if (obj.delay <= 0) {
-                                      junY++; 
-                                  } else {
-                                      junN++;
-                                  }
-                    } else if (month[6] == '7') {
-                                  if (obj.delay <= 0) {
-                                      julY++; 
-                                  } else {
-                                      julN++;
-                                  }
-                    } else if (month[6] == '8') {
-                                  if (obj.delay <= 0) {
-                                      augY++; 
-                                  } else {
-                                      augN++;
-                                  }
-                    } else if (month[6] == '9') {
-                                  if (obj.delay <= 0) {
-                                      sepY++; 
-                                  } else {
-                                      sepN++;
-                                  }
-                    } 
-                  } else  {
-                          if (month[6] == '0') {
-                                          if (obj.delay <= 0) {
-                                              octY++; 
-                                          } else {
-                                              octN++;
-                                          }
-                            } else if (month[6] == '1') {
-                                          if (obj.delay <= 0) {
-                                              novY++; 
-                                          } else {
-                                              novN++;
-                                          }
-                            }   else if (month[6] == '2') {
-                                          if (obj.delay <= 0) {
-                                              decY++; 
-                                          } else {
-                                              decN++;
-                                          }
+                for(let i=0; i<res.length; i++) {
+                    let obj = res[i];
+                        let time = obj.trip_start_time;
+                        let month = time.split("-",3);
+                        month = month[1].valueOf()-1;
+                        if(obj.delay > 0) {
+                          monthN[month]++; 
+                        } else {
+                          monthY[month]++;
+                        }
+                        let x= 0;
+                        let y=0;
+                        for(let j=0; j< res.length; j++) {
+                            if(obj.srcname == res[j].srcname) {
+                                x++;
                             }
-                    
-                    
-                  }
-                  console.log(obj.delay);
+                            if(obj.destname == res[j].destname) {
+                                y++;
+                            }
+                        }
 
-                  let x=0;
-                  let y=0;
+                        if(x > this.src[0]) {
+                          if(this.srcn.indexOf(obj.srcname) == -1) {
+                              let s3 = this.src[1];
+                              let s2 = this.src[0];
+                              let s1 = x;
+                              let sn3 = this.srcn[1];
+                              let sn2 = this.srcn[0];
+                              let sn1 = obj.srcname;
 
-                  res.forEach(element => {
-                    if(element.srcname == obj.srcname) {
-                        x++;
-                    }
-                    if(element.destname == obj.destname) {
-                      y++;
-                    }
-                  });
-                  if(x<=this.source1 ) {
-                      if(x<=this.source2 && this.srcn1 != obj.srcname && this.srcn2 != obj.srcname && this.srcn3 != obj.srcname) {
-                        this.source3 = x;
-                        this.srcn3 = obj.srcname;
-                      } else if(x> this.source2 && this.srcn1 != obj.srcname && this.srcn2 != obj.srcname && this.srcn3 != obj.srcname){
-                        this.source3 = this.source2;
-                        this.srcn3 = this.srcn2;
-                        this.source2 = x;
-                        this.srcn2 = obj.srcname;
-                      }
-                  } else if(x>this.source1 && this.srcn1 != obj.srcname && this.srcn2 != obj.srcname && this.srcn3 != obj.srcname) {
-                    this.source3 = this.source2
-                    this.srcn3 = this.srcn2;
-                    this.source2 = this.source1;
-                    this.srcn2 = this.srcn1;
-                    this.source1 = x;
-                    this.srcn1 = obj.destname;
-                  }
+                              this.src = [s1, s2, s3];
+                              this.srcn = [sn1, sn2, sn3];
+                          }
+                        } else if(x > this.src[1]) {
+                              if(this.srcn.indexOf(obj.srcname) == -1) {
+                                let s3 = this.src[1];
+                                let s2 = x;
+                                let s1 = this.src[0];
+                                let sn3 = this.srcn[1];
+                                let sn2 = obj.srcname;
+                                let sn1 = this.srcn[0];
 
-                  if(y<=this.dest1 ) {
-                      if(y<=this.dest2 && this.destn1 != obj.destname && this.destn2 != obj.destname && this.destn3 != obj.destname) {
-                        this.dest3 = y;
-                        this.destn3 = obj.destname;
-                      } else if(y > this.dest2 && this.destn1 != obj.destname && this.destn2 != obj.destname && this.destn3 != obj.destname){
-                        this.dest3 = this.dest2;
-                        this.destn3 = this.destn2;
-                        this.dest2 = y;
-                        this.destn2 = obj.destname;
-                      }
-                  } else if(y >this.dest1 && this.destn1 != obj.destname && this.destn2 != obj.destname && this.destn3 != obj.destname) {
-                    this.dest3 = this.dest2;
-                    this.destn3 = this.destn2;
-                    this.dest2 = this.dest1;
-                    this.destn2 = this.destn1;
-                    this.dest1 = y;
-                    this.destn1 = obj.destname;
-                  }
-                  
-                  console.log(this.destn1);
-                  console.log(this.destn2);
-                  console.log(this.destn3);
-                  
-                });
+                                this.src = [s1, s2, s3];
+                                this.srcn = [sn1, sn2, sn3];
+                            }
+                        }   else if(x > this.src[2]) {
+                              if(this.srcn.indexOf(obj.srcname) == -1) {
+                                let s3 = x;
+                                let s2 = this.src[1];
+                                let s1 = this.src[0];
+                                let sn3 = obj.srcname;
+                                let sn2 = this.srcn[1];
+                                let sn1 = this.srcn[0];
 
-                
-                console.log('done');
+                                this.src = [s1, s2, s3];
+                                this.srcn = [sn1, sn2, sn3];
+                            }
+                        }
+
+                        if(y > this.dest[0]) {
+                            if(this.destn.indexOf(obj.destname) == -1) {
+                                let s3 = this.dest[1];
+                                let s2 = this.dest[0];
+                                let s1 = y;
+                                let sn3 = this.destn[1];
+                                let sn2 = this.destn[0];
+                                let sn1 = obj.destname;
+
+                                this.dest = [s1, s2, s3];
+                                this.destn = [sn1, sn2, sn3];
+                            }
+                          } else if(y > this.dest[1]) {
+                                if(this.destn.indexOf(obj.destname) == -1) {
+                                  let s3 = this.dest[1];
+                                  let s2 = y;
+                                  let s1 = this.dest[0];
+                                  let sn3 = this.destn[1];
+                                  let sn2 = obj.destname;
+                                  let sn1 = this.destn[0];
+
+                                  this.dest = [s1, s2, s3];
+                                  this.destn = [sn1, sn2, sn3];
+                              }
+                          }   else if(y > this.dest[2]) {
+                                if(this.destn.indexOf(obj.destname) == -1) {
+                                  let s3 = y;
+                                  let s2 = this.dest[1];
+                                  let s1 = this.dest[0];
+                                  let sn3 = obj.destname;
+                                  let sn2 = this.destn[1];
+                                  let sn1 = this.destn[0];
+
+                                  this.dest = [s1, s2, s3];
+                                  this.destn = [sn1, sn2, sn3];
+                              }
+                          }
+                        
+                        
+
+                } console.log(monthY);
+                console.log(this.srcn);
 
                 const barchartdata = {
-                      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'dec'],
-                      datasets: [
-                          {
-                                  label: 'delay<=0',
-                                  borderColor: '#3eff10',
-                                  stack: 'Stack 0',
-                                  backgroundColor: '#3eff10',
-                                  data: [
-                                    janY,febY,marY,aprY,mayY,junY,julY,augY,sepY,octY,novY,decY
-                                  ]
-                          }, 
-                          {
-                                  label: 'delay>0',
-                                  borderColor: '#ffc107',
-                                  stack: 'Stack 0',
-                                  backgroundColor: '#ffc107',
-                                  data: [
-                                    janN,febN,marN,aprN,mayN,junN,julN,augN,sepN,octN,novN,decN
-                                  ]
-                          }
-                        ]
-                  }
-                
+                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'dec'],
+                  datasets: [
+                      {
+                              label: 'delay<=0',
+                              borderColor: '#3eff10',
+                              stack: 'Stack 0',
+                              backgroundColor: '#3eff10',
+                              data: monthY
+                      }, 
+                      {
+                              label: 'delay>0',
+                              borderColor: '#ffc107',
+                              stack: 'Stack 0',
+                              backgroundColor: '#ffc107',
+                              data: monthN
+                      }
+                    ]
+              }
 
-                this.chart = new Chart(this.canvasB.nativeElement.getContext('2d'), {
+
+        this.chart = new Chart(this.canvasB.nativeElement.getContext('2d'), {
                     type: 'bar',
                     data: barchartdata,
                     options: {
@@ -258,8 +179,8 @@ export class AppComponent {
                     }
 
                 })
-                
-                
+
+
             });
 
     
